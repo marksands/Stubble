@@ -1,6 +1,7 @@
 #import "SBLMatcher.h"
 #import "SBLArgumentMatcherResult.h"
 #import "SBLValueLoggingHelper.h"
+#import "SBLMockObject.h"
 
 typedef void(^SBLMatcherPostInvocationMatchBlock)(SBLInvocationArgument *argument);
 
@@ -44,7 +45,10 @@ typedef void(^SBLMatcherPostInvocationMatchBlock)(SBLInvocationArgument *argumen
 
 + (instancetype)objectIsEqualMatcher:(id)object {
 	return [SBLMatcher matcherWithBlock:^SBLArgumentMatcherResult *(SBLInvocationArgument *argument) {
-        BOOL argumentMatches = [object isEqual:argument.argument] || (!object && !argument.argument);
+        BOOL argumentMatches = object == argument.argument || (!object && !argument.argument);
+        if (![object isKindOfClass:SBLMockObject.class]) {
+            argumentMatches = argumentMatches || [object isEqual:argument.argument];
+        }
         SBLArgumentMatcherResult *argumentMatcherResult = [[SBLArgumentMatcherResult alloc] initWithMatches:argumentMatches
                                                          expectedArgumentForLogging:object
                                                            actualArgumentForLogging:argument.argument];

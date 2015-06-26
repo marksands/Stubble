@@ -31,6 +31,19 @@
     return self;
 }
 
+- (BOOL)isEqual:(id)object {
+    NSMethodSignature *methodSignature = [NSMethodSignature methodSignatureForSelector:_cmd];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+    [invocation setTarget:self];
+    [invocation setArgument:&object atIndex:2];
+    
+    [self forwardInvocation:invocation];
+    
+    BOOL result;
+    [invocation getReturnValue:&result];
+    return result;
+}
+
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
     return [self.sblBehavior mockObjectMethodSignatureForSelector:aSelector];
 }

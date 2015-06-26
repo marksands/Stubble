@@ -296,4 +296,15 @@
     XCTAssertEqual(mock.methodReturningBool, m);
 }
 
+- (void)testWhenIsEqualStubbedWithTwoMocksThenTheCorrectValueIsReturned {
+    SBLTestingClass *mock1 = mock(SBLTestingClass.class);
+    SBLTestingClass *mock2 = mock(SBLTestingClass.class);
+
+    [when([mock1 isEqual:mock2]) thenReturn:@YES];
+    
+    XCTAssertTrue([mock1 isEqual:mock2]);
+    XCTAssertFalse([mock1 isEqual:nil]);
+    XCTAssertFalse([mock1 isEqual:@"mock2"]);
+}
+
 @end
