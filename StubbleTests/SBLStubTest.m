@@ -296,4 +296,17 @@
     XCTAssertEqual(mock.methodReturningBool, m);
 }
 
+- (void)testWhenComparingAnArrayOfProtocolMocksToNilThenAHelpfulErrorMessageIsReturned {
+    id<SBLTestingProtocol> child1 = mock(@protocol(SBLTestingProtocol));
+    id<SBLTestingProtocol> child2 = mock(@protocol(SBLTestingProtocol));
+    id<SBLTestingProtocol> child3 = mock(@protocol(SBLTestingProtocol));
+    
+    // A failure in XCTAssertEqualObjects calls -[NSString stringWithFormat:]
+    @try {
+        [NSString stringWithFormat:@"%@", @[child1, child2, child3]];
+    } @catch (NSException *e) {
+        XCTFail(@"Should not have thornw NSException!");
+    }
+}
+
 @end

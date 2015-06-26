@@ -17,8 +17,12 @@
 }
 
 - (NSMethodSignature *)mockObjectMethodSignatureForSelector:(SEL)aSelector {
-	struct objc_method_description description = [self methodDescriptionForSelector:aSelector];
-	return [NSMethodSignature signatureWithObjCTypes:description.types];
+    @try {
+        struct objc_method_description description = [self methodDescriptionForSelector:aSelector];
+        return [NSMethodSignature signatureWithObjCTypes:description.types];
+    } @catch (NSException *e) {
+        return [NSMethodSignature methodSignatureForSelector:aSelector];
+    }
 }
 
 - (BOOL)mockObjectRespondsToSelector:(SEL)aSelector {
